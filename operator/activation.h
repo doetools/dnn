@@ -1,5 +1,6 @@
-#include "../layer/percepton.h"
-#include "../layer/dense_layer.h"
+#ifndef _ACTIVATION_H
+#define _ACTIVATION_H
+
 #include "../include/dnn.h"
 
 namespace activation_fn
@@ -7,18 +8,22 @@ namespace activation_fn
     // ReLU
     FLOAT ReLU(FLOAT &x)
     {
+        FLOAT y = 0;
+
         if (x > 0)
-            return x;
-        else
-            return FLOAT(0);
+            y = x;
+
+        return y;
     }
 
     FLOAT d_ReLU(FLOAT &x)
     {
+        FLOAT dy = 0;
+
         if (x > 0)
-            return FLOAT(1);
-        else
-            return FLOAT(0);
+            dy = FLOAT(1);
+
+        return dy;
     }
 }
 
@@ -83,27 +88,34 @@ protected:
     // for percepton and layer
 
     // percepton
-    void forward(Percepton<FLOAT> &x)
+    Percepton<FLOAT> forward(Percepton<FLOAT> &x)
     {
         x.value_new = forward(x.value_old);
+        return x;
     }
 
     // percepton
-    void backward(Percepton<FLOAT> &x)
+    Percepton<FLOAT> backward(Percepton<FLOAT> &x)
     {
         x.value_new = backward(x.value_old);
+        return x;
     }
 
     // layer
-    void forward(Dense_Layer<T> &x)
+    Dense_Layer<FLOAT> forward(Dense_Layer<FLOAT> &x)
     {
-        for_each(x.begin(), x.end(), [](Percepton<T> &i)
-                 { forward(i); });
+        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<FLOAT> &i)
+                 { this->forward(i); });
+        return x;
     }
     // layer
-    void backward(Dense_Layer<T> &x)
+    Dense_Layer<FLOAT> backward(Dense_Layer<FLOAT> &x)
     {
-        for_each(x.begin(), x.end(), [](Percepton<T> &i)
-                 { backward(i); });
+        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<FLOAT> &i)
+                 { this->backward(i); });
+
+        return x;
     }
 };
+
+#endif
