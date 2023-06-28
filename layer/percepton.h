@@ -1,6 +1,8 @@
 #ifndef _PERCEPTON_H
 #define _PERCEPTON_H
 
+#include "../include/dnn.h"
+
 template <typename T>
 class Percepton
 {
