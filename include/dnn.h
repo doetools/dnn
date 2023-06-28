@@ -7,4 +7,6 @@
 
 #define FLOAT float
 
+#define RELU "ReLU"
+
 using namespace std;

@@ -23,14 +23,14 @@ public:
     // fn, will not change object
     T fn(T &x) const override
     {
-        if (act_fn_name == string("ReLU"))
+        if (act_fn_name == string(RELU))
             return ReLU(x);
     };
 
     // derivative, will not change object
     T d_fn(T &x) const override
     {
-        if (act_fn_name == string("ReLU"))
+        if (act_fn_name == string(RELU))
             return d_ReLU(x);
     };
 
