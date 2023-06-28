@@ -11,7 +11,7 @@ public:
     int num_percepton = 0;
 
     // value
-    vector<Percepton<T>> perceptons{num_percepton, Percepton<T>()};
+    vector<Perceptron<T>> perceptons{num_percepton, Perceptron<T>()};
 
     // a default constructor
     Dense_Layer() = default;

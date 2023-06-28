@@ -93,14 +93,14 @@ protected:
     // for percepton and layer
 
     // percepton
-    Percepton<T> forward(Percepton<T> &x)
+    Perceptron<T> forward(Perceptron<T> &x)
     {
         x.value_new = forward(x.value_old);
         return x;
     }
 
     // percepton
-    Percepton<T> backward(Percepton<T> &x)
+    Perceptron<T> backward(Perceptron<T> &x)
     {
         x.value_new = backward(x.value_old);
         return x;
@@ -109,14 +109,14 @@ protected:
     // layer
     Dense_Layer<T> forward(Dense_Layer<T> &x)
     {
-        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<T> &i)
+        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Perceptron<T> &i)
                  { this->forward(i); });
         return x;
     }
     // layer
     Dense_Layer<T> backward(Dense_Layer<T> &x)
     {
-        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<T> &i)
+        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Perceptron<T> &i)
                  { this->backward(i); });
 
         return x;

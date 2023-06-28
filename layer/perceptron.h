@@ -2,7 +2,7 @@
 #define _PERCEPTON_H
 
 template <typename T>
-class Percepton
+class Perceptron
 {
 
 public:
@@ -13,7 +13,7 @@ public:
     T value_old{0.0};
 
     // a default constructor
-    Percepton() = default;
+    Perceptron() = default;
 };
 
 #endif

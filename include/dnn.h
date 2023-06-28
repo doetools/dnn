@@ -13,7 +13,7 @@ using namespace std;
 #include <string>
 #include <functional>
 
-#include "../layer/percepton.h"
+#include "../layer/perceptron.h"
 #include "../layer/dense_layer.h"
 #include "../operator/activation.h"
 #include "../operator/add.h"
