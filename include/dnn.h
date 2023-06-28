@@ -1,3 +1,6 @@
+#ifndef _DNN_H
+#define _DNN_H
+
 #include <iostream>
 #include <list>
 #include <vector>
@@ -10,3 +13,5 @@
 #define RELU "ReLU"
 
 using namespace std;
+
+#endif;

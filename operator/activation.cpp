@@ -1,4 +1,24 @@
-#include "../include/dnn.h"
+#include "../layer/percepton.h"
+
+namespace activation_fn
+{
+    // ReLU
+    FLOAT ReLU(FLOAT &x) const
+    {
+        if (x > 0)
+            return x;
+        else
+            return FLOAT(0);
+    }
+
+    FLOAT d_ReLU(FLOAT &x) const
+    {
+        if (x > 0)
+            return FLOAT(1);
+        else
+            return FLOAT(0);
+    }
+}
 
 template <typename T>
 class MathOperator
@@ -18,7 +38,26 @@ public:
 
     ActivationOperator<T>() {}
 
-    ActivationOperator<T>(string act_fn_name) : act_fn_name(act_fn_name) {}
+    function<FLOAT(FLOAT)> forward;
+    function<FLOAT(FLOAT)> backward;
+
+    // overload constructors
+    ActivationOperator<T>(string act_fn_name = string(RELU)) : act_fn_name(act_fn_name)
+    {
+        if (act_fn_name == string(RELU))
+        {
+            forward = ReLU;
+            backward = d_ReLU;
+        }
+    }
+    ActivationOperator<T>(char *act_fn_name = RELU) : act_fn_name(act_fn_name)
+    {
+        if (string(act_fn_name) == string(RELU))
+        {
+            forward = ReLU;
+            backward = d_ReLU;
+        }
+    }
 
     // fn, will not change object
     T fn(T &x) const override
@@ -35,19 +74,31 @@ public:
     };
 
 protected:
-    T ReLU(T &x) const
+    // overload forward and backward fns
+    // for percepton and layer
+
+    // percepton
+    void forward(Percepton<FLOAT> &x) const
     {
-        if (x > 0)
-            return x;
-        else
-            return T(0);
+        x.value_new = ReLU(x.old);
     }
 
-    T d_ReLU(T &x) const
+    // percepton
+    void backward(Percepton<FLOAT> &x) const
     {
-        if (x > 0)
-            return T(1);
-        else
-            return T(0);
+        x.value_new = ReLU(x.old);
+    }
+
+    // layer
+    void forward(Dense_Layer<T> &x) const
+    {
+        for_each(x.begin(), x.end(), [](Percepton<T> &i)
+                 { ReLU(i) });
+    }
+    // layer
+    void backward(Dense_Layer<T> &x) const
+    {
+        for_each(x.begin(), x.end(), [](Percepton<T> &i)
+                 { d_ReLU(i) });
     }
 };

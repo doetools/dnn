@@ -1,12 +1,13 @@
-#include "./layer/percepton.cpp"
+#include "./layer/percepton.h"
+#include "./operator/add.cpp"
 
 int main()
 {
-    Percepton<FLOAT> p(RELU);
-    cout << p.act_fn_name << endl;
-    FLOAT x = 15;
-    cout << p(x) << endl;
-    cout << p.activation.d_fn(x) << endl;
+    vector<int> a(11, 1);
+    vector<int> b(11, 10);
 
-    // ActivationOperator<FLOAT>(string("ReLU"));
+    vector<int> c = a + b;
+
+    for (auto i : c)
+        cout << i << endl;
 }
