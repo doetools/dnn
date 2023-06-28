@@ -1,8 +1,6 @@
 #ifndef _PERCEPTON_H
 #define _PERCEPTON_H
 
-#include "../include/dnn.h"
-
 template <typename T>
 class Percepton
 {
@@ -13,6 +11,9 @@ public:
 
     // function before activation fn
     T value_old{0.0};
+
+    // a default constructor
+    Percepton() = default;
 };
 
 #endif

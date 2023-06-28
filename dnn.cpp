@@ -2,11 +2,11 @@
 
 int main()
 {
-    ActivationOperator<FLOAT> act = ActivationOperator<FLOAT>(RELU);
-    FLOAT x = 10;
+    // ActivationOperator<FLOAT> act = ActivationOperator<FLOAT>(RELU);
+    // FLOAT x = 10;
 
-    cout << "activation value: " << act.fn(x) << endl;
-    cout << "derivative activation value: " << act.d_fn(x) << endl;
+    // cout << "activation value: " << act.fn(x) << endl;
+    // cout << "derivative activation value: " << act.d_fn(x) << endl;
 
     // activation a layer
     Dense_Layer<FLOAT> l = Dense_Layer<FLOAT>(10);
@@ -14,7 +14,7 @@ int main()
     for_each(l.perceptons.begin(), l.perceptons.end(), [](auto &x)
              { x.value_old = 12; });
 
-    ActivationOperator<Dense_Layer<FLOAT>> act_layer = ActivationOperator<Dense_Layer<FLOAT>>(RELU);
+    ActivationOperator<FLOAT, Dense_Layer> act_layer{RELU};
 
     act_layer.d_fn(l);
 

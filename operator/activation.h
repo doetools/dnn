@@ -5,7 +5,9 @@
 
 namespace activation_fn
 {
+
     // ReLU
+    template <typename T>
     FLOAT ReLU(FLOAT &x)
     {
         FLOAT y = 0;
@@ -15,7 +17,7 @@ namespace activation_fn
 
         return y;
     }
-
+    template <typename T>
     FLOAT d_ReLU(FLOAT &x)
     {
         FLOAT dy = 0;
@@ -27,47 +29,50 @@ namespace activation_fn
     }
 }
 
-template <typename T>
+template <typename T, template <typename> class C>
 class MathOperator
 {
 public:
     // function
-    virtual T fn(T &x) = 0;
+    virtual C<T> fn(C<T> &x) = 0;
     // derivative
-    virtual T d_fn(T &x) = 0;
+    virtual C<T> d_fn(C<T> &x) = 0;
+
+    // a default constructor
+    MathOperator() = default;
 };
 
-template <typename T>
-class ActivationOperator : public MathOperator<T>
+template <typename T, template <typename> class C>
+class ActivationOperator : public MathOperator<T, C>
 {
 public:
     string act_fn_name;
 
     // function to activate a percepton
-    function<FLOAT(FLOAT &)> forward_fn;
-    function<FLOAT(FLOAT &)> backward_fn;
+    function<T(T &)> forward_fn;
+    function<T(T &)> backward_fn;
 
-    // empty constructor
-    ActivationOperator<T>() {}
+    // a default constructor
+    ActivationOperator<T, C>() = default;
 
     // overload constructor
-    ActivationOperator<T>(char *act_fn_name = RELU) : act_fn_name(act_fn_name)
+    ActivationOperator<T, C>(char *act_fn_name = RELU) : act_fn_name(act_fn_name)
     {
         if (string(act_fn_name) == string(RELU))
         {
-            forward_fn = activation_fn::ReLU;
-            backward_fn = activation_fn::d_ReLU;
+            forward_fn = activation_fn::ReLU<T>;
+            backward_fn = activation_fn::d_ReLU<T>;
         }
     }
 
     // x -> y = f(x)
-    T fn(T &x) override
+    C<T> fn(C<T> &x) override
     {
         return forward(x);
     };
 
     // d(f(x))/d(x)
-    T d_fn(T &x) override
+    C<T> d_fn(C<T> &x) override
     {
         return backward(x);
     };
@@ -75,11 +80,11 @@ public:
 protected:
     //  forward to calculate f(x)
     // backward to calculate d(f)/d(x)
-    FLOAT forward(FLOAT &x)
+    T forward(T &x)
     {
         return forward_fn(x);
     }
-    FLOAT backward(FLOAT &x)
+    T backward(T &x)
     {
         return backward_fn(x);
     }
@@ -88,30 +93,30 @@ protected:
     // for percepton and layer
 
     // percepton
-    Percepton<FLOAT> forward(Percepton<FLOAT> &x)
+    Percepton<T> forward(Percepton<T> &x)
     {
         x.value_new = forward(x.value_old);
         return x;
     }
 
     // percepton
-    Percepton<FLOAT> backward(Percepton<FLOAT> &x)
+    Percepton<T> backward(Percepton<T> &x)
     {
         x.value_new = backward(x.value_old);
         return x;
     }
 
     // layer
-    Dense_Layer<FLOAT> forward(Dense_Layer<FLOAT> &x)
+    Dense_Layer<T> forward(Dense_Layer<T> &x)
     {
-        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<FLOAT> &i)
+        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<T> &i)
                  { this->forward(i); });
         return x;
     }
     // layer
-    Dense_Layer<FLOAT> backward(Dense_Layer<FLOAT> &x)
+    Dense_Layer<T> backward(Dense_Layer<T> &x)
     {
-        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<FLOAT> &i)
+        for_each(x.perceptons.begin(), x.perceptons.end(), [&](Percepton<T> &i)
                  { this->backward(i); });
 
         return x;
